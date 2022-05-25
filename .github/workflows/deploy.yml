@@ -1,11 +1,11 @@
 name: "DEPLOY API"
 
-# on:
-#   push:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
 
-
+ 
 env:
   AZURE_WEBAPP_NAME: apiserviceconstantin
   AZURE_WEBAPP_PATH: './Published'
