@@ -31,6 +31,8 @@ app.MapControllers();
 
 app.UseStaticFiles();
 
+app.UseDeveloperExceptionPage();
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
