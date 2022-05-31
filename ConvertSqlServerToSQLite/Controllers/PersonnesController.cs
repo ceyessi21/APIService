@@ -127,27 +127,30 @@ namespace ConvertSqlServerToSQLite.Controllers
             GC.SuppressFinalize(this);
 
             await _litecontext.Database.CloseConnectionAsync();
-            await _litecontext.DisposeAsync();
+             _litecontext.Dispose();
             GC.SuppressFinalize(this);
+            SqliteConnection.ClearAllPools();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
             //var fileBytes = Encoding.UTF8.GetBytes(path);
             //MemoryStream ms = new MemoryStream(System.IO.File.ReadAllBytes(dbname));
             //System.IO.File.WriteAllBytes(ndb, ms.ToArray());
 
-            //var nDB = dbname.Clone();
-            //MemoryStream ms = new MemoryStream();
-            //FileStream file = new FileStream(nDB.ToString(), FileMode.Create, FileAccess.Write, FileShare.Read);
-            //ms.WriteTo(file);
-            //file.Close();
-            //ms.Close();
 
-            //using (FileStream file = new FileStream(dbname, FileMode.Open, FileAccess.Read)) 
-            //dbname.CopyTo(ms);
+            var ms = new MemoryStream();
 
-            var fileBytes = System.IO.File.Open(dbname, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-            //var fileBytes = System.IO.File.ReadAllBytes(dbname);
-            return File(fileBytes, "application/octet-stream", dbname);
-                
+            using (var file = new FileStream(dbname, FileMode.Open, FileAccess.Read))
+            {
+                file.CopyTo(ms);
+            }
+
+            System.IO.File.Delete(dbname);
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            return File(ms, "application/octet-stream", $"fcm.db");
+
         }
 
     }
