@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<sqldbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("dbconn")));
-builder.Services.AddDbContext<liteContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("liteconn")));
+builder.Services.AddDbContext<LiteContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("liteconn")));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -37,7 +37,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
 
-        var context = services.GetRequiredService<liteContext>();
+        var context = services.GetRequiredService<LiteContext>();
         context.Database.Migrate();
         context.Database.EnsureCreated();
     }

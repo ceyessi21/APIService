@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ConvertSqlServerToSQLite.Migrations
 {
-    [DbContext(typeof(liteContext))]
+    [DbContext(typeof(LiteContext))]
     partial class liteContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

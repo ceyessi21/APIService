@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using System.Reflection;
-using System.Text;
 
 namespace ConvertSqlServerToSQLite.Controllers
 {
@@ -13,10 +10,9 @@ namespace ConvertSqlServerToSQLite.Controllers
     public class PersonnesController : ControllerBase
     {
         private readonly sqldbContext _context;
-        private readonly liteContext _litecontext;
-        private bool disposedValue;
+        private readonly LiteContext _litecontext;
 
-        public PersonnesController(sqldbContext context, liteContext liteContext)
+        public PersonnesController(sqldbContext context, LiteContext liteContext)
         {
             _context = context;
             _litecontext = liteContext;
@@ -96,26 +92,16 @@ namespace ConvertSqlServerToSQLite.Controllers
             return _context.Personnes.Any(e => e.Id == id);
         }
 
-        //public void Dispose()
-        //{
-        //    _context.Dispose();
-        //    GC.SuppressFinalize(_context);
-
-        //    _litecontext.Dispose();
-        //    GC.SuppressFinalize(_litecontext);   
-        //}
-
         //POST: api/Personnes
         //To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult> ConverteSQLServerToSQLite(Personne personne)
+        public async Task<ActionResult> ConverteSQLServerToSQLite()
         {
             var dbname = "myDb.db";
-            string path = Environment.CurrentDirectory + "/" + dbname;
+            //string path = Environment.CurrentDirectory + "/" + dbname;
 
             await _litecontext.Database.EnsureDeletedAsync();
             await _litecontext.Database.EnsureCreatedAsync();
-            //await _litecontext.Database.MigrateAsync();
 
             List<Personne> p = await _context.Personnes.ToListAsync();
             await _litecontext.AddRangeAsync(p);
@@ -124,19 +110,14 @@ namespace ConvertSqlServerToSQLite.Controllers
 
             await _context.Database.CloseConnectionAsync();
             await _context.DisposeAsync();
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
 
             await _litecontext.Database.CloseConnectionAsync();
              _litecontext.Dispose();
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
             SqliteConnection.ClearAllPools();
             GC.Collect();
             GC.WaitForPendingFinalizers();
-
-            //var fileBytes = Encoding.UTF8.GetBytes(path);
-            //MemoryStream ms = new MemoryStream(System.IO.File.ReadAllBytes(dbname));
-            //System.IO.File.WriteAllBytes(ndb, ms.ToArray());
-
 
             var ms = new MemoryStream();
 

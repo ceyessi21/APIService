@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ConvertSqlServerToSQLite.Migrations
 {
-    [DbContext(typeof(liteContext))]
+    [DbContext(typeof(LiteContext))]
     [Migration("20220512094335_init")]
     partial class init
     {
