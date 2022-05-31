@@ -30,7 +30,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseStaticFiles();
-
+//Afficher l'erreur sur la page.
 app.UseDeveloperExceptionPage();
 
 using (var scope = app.Services.CreateScope())
